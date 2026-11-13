@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Patient Records - DHMP Agbor</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="dashboard-body">
+
+  <div class="dashboard-layout">
+    
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <a href="/">
+          <img src="/images/dashboardlogo.svg" alt="DHMP Agbor Logo">
+        </a>
+      </div>
+      
+      <ul class="sidebar-menu">
+        <li><a href="/admin-dashboard"><i class="fas fa-chart-pie"></i> Overview</a></li>
+        <li><a href="/admin-appointments"><i class="fas fa-calendar-check"></i> Appointments</a></li>
+        <li class="active"><a href="/admin-patients"><i class="fas fa-users"></i> Patient Records</a></li>
+      </ul>
+
+      <div class="sidebar-bottom">
+        <ul class="sidebar-menu">
+          <li><a href="/admin-settings"><i class="fas fa-cog"></i> Facility Settings</a></li>
+          <li><a href="/login" class="logout"><i class="fas fa-sign-out-alt"></i> Secure Logout</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <main class="dashboard-content">
+      
+      <header class="dashboard-header" style="justify-content: space-between;">
+        <div class="live-clock" id="liveDateTime">
+          <i class="far fa-clock"></i> Loading time...
+        </div>
+        
+        <div class="profile-shortcut">
+          <div class="facility-badge">
+            <i class="fas fa-hospital"></i> <%= adminFacility %>
+          </div>
+        </div>
+      </header>
+
+      <div class="page-title">
+        <h1>Patient Database</h1>
+        <p>Access and manage secure medical files for all registered patients.</p>
+      </div>
+
+      <div class="booking-card admin-table-card" style="margin-top: 10px;">
+        
+        <div class="table-header">
+          <h2>Registered Patients</h2>
+          <button class="btn-book-submit" style="padding: 10px 20px; font-size: 14px;"><i class="fas fa-user-plus" style="margin-right: 8px;"></i> Add New Patient</button>
+        </div>
+
+        <div class="table-controls">
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Search by name, ID, or phone number...">
+          </div>
+          
+          <div class="filter-group">
+            <select class="filter-input">
+              <option value="all">All Blood Groups</option>
+              <option value="op">O Positive (O+)</option>
+              <option value="on">O Negative (O-)</option>
+            </select>
+            <select class="filter-input">
+              <option value="all">All Genotypes</option>
+              <option value="aa">AA</option>
+              <option value="as">AS</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="table-responsive">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Patient Profile</th>
+                <th>Demographics</th>
+                <th>Medical Vitals</th>
+                <th>Last Visit</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+              <% if (patients.length > 0) { %>
+                <% patients.forEach(function(patient) { 
+                  // Calculate live age from DOB
+                  let age = "Unknown";
+                  if (patient.dob) {
+                    const diff_ms = Date.now() - new Date(patient.dob).getTime();
+                    const age_dt = new Date(diff_ms);
+                    age = Math.abs(age_dt.getUTCFullYear() - 1970) + " Years";
+                  }
+                %>
+                  <tr>
+                    <td>
+                      <strong><%= patient.full_name %></strong><br>
+                      <span class="text-small">ID: AGB-2026-<%= patient.id %></span>
+                      <span class="text-small"><i class="fas fa-phone-alt"></i> <%= patient.phone || 'No phone recorded' %></span>
+                    </td>
+                    <td>
+                      <strong><%= age %></strong><br>
+                      <span class="text-small">Gender not specified</span>
+                    </td>
+                    <td>
+                      <div style="display: flex; gap: 8px; margin-bottom: 5px;">
+                        <span class="badge badge-medical" style="background:#e2e8f0; color:#475569;">Awaiting Lab</span>
+                      </div>
+                      <span class="text-small">File under review</span>
+                    </td>
+                    <td>
+                      <% if (patient.last_visit) { %>
+                        <strong><%= new Date(patient.last_visit).toLocaleDateString() %></strong><br>
+                        <span class="text-small"><%= patient.last_department %></span>
+                      <% } else { %>
+                        <strong>No visits yet</strong><br>
+                        <span class="text-small">N/A</span>
+                      <% } %>
+                    </td>
+                    <td class="action-cell">
+                      <button class="btn-action-neutral" title="View Full Medical File"><i class="fas fa-folder-open"></i></button>
+                    </td>
+                  </tr>
+                <% }); %>
+              <% } else { %>
+                <tr>
+                  <td colspan="5" style="text-align: center; padding: 20px;">No registered patients found.</td>
+                </tr>
+              <% } %>
+
+            </tbody>
+          </table>
+        </div>
+        
+        <div class="pagination">
+          <p class="page-info">Showing all database entries</p>
+          <div class="page-buttons">
+            <button class="btn-page" disabled><i class="fas fa-chevron-left"></i></button>
+            <button class="btn-page active">1</button>
+            <button class="btn-page" disabled><i class="fas fa-chevron-right"></i></button>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    function updateClock() {
+      const now = new Date();
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      const dateString = now.toLocaleDateString('en-US', options);
+      
+      let hours = now.getHours();
+      let minutes = now.getMinutes();
+      let seconds = now.getSeconds();
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      
+      hours = hours % 12;
+      hours = hours ? hours : 12; 
+      minutes = minutes < 10 ? '0' + minutes : minutes;
+      seconds = seconds < 10 ? '0' + seconds : seconds;
+      
+      const timeString = hours + ':' + minutes + ':' + seconds + ' ' + ampm;
+      
+      document.getElementById('liveDateTime').innerHTML = 
+        `<i class="far fa-clock"></i> <strong>${timeString}</strong> &nbsp;|&nbsp; ${dateString}`;
+    }
+
+    updateClock();
+    setInterval(updateClock, 1000);
+  </script>
+
+</body>
+</html>

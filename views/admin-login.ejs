@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Staff Portal - DHMP Agbor</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="auth-body">
+
+  <div class="auth-container">
+    <div class="auth-card" style="border-top: 5px solid #d90429;">
+      
+      <div class="auth-header">
+        <img src="/images/adminlogo.svg" alt="DHMP Agbor Logo" class="auth-logo">
+        <h1 style="color: #d90429;">Staff Portal</h1>
+        <p><strong>Restricted Access.</strong> Authorized hospital administrators and healthcare personnel only.</p>
+      </div>
+
+      <form action="/api/admin-login" method="POST" class="auth-form">
+        
+        <div class="input-group">
+          <label for="admin-email">Staff Username / Facility ID</label>
+          <div class="input-with-icon">
+            <i class="fas fa-hospital-user"></i>
+            <input type="text" id="admin-email" name="username" placeholder="e.g., admin_central" required>
+          </div>
+        </div>
+
+        <div class="input-group" style="margin-top: 20px;">
+          <label for="admin-password">Secure Password</label>
+          <div class="input-with-icon">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="admin-password" name="password" placeholder="Enter your staff password" required>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-auth-submit" style="background-color: #002651;">Secure Login</button>
+
+      </form>
+
+      <div class="auth-footer">
+        <p><i class="fas fa-shield-alt"></i> DHMP Agbor Secure Network</p>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

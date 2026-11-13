@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In - DHMP Agbor</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+  <section class="signin-page">
+    
+    <div class="signin-left">
+      <div class="form-card">
+        <h2>Please enter your<br>login details</h2>
+        
+        <form action="/api/login" method="POST" class="login-form">
+          
+          <div class="input-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+          </div>
+
+          <div class="input-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+          </div>
+
+          <div class="forgot-password">
+            <a href="#">Forgot password?</a>
+          </div>
+
+          <button type="submit" class="btn-submit">Sign in</button>
+          
+        </form>
+
+        <p class="auth-prompt">Don't have an account? <a href="/signup">Sign up</a></p>
+      </div>
+    </div>
+
+    <div class="signin-right">
+      <a href="/" class="auth-logo">
+        <img src="/images/signinlogo.png" alt="Logo" />
+      </a>
+      
+      <div class="right-text">
+        <h1>Welcome<br>Back</h1>
+        <div class="accent-line"></div>
+      </div>
+    </div>
+
+  </section>
+
+</body>
+</html>

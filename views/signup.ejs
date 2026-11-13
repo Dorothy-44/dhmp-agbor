@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up - DHMP Agbor</title>
+  
+  <link rel="stylesheet" href="/style.css">
+  
+  </head>
+<body>
+
+  <section class="signup-page">
+    
+    <div class="signup-left">
+      <a href="/" class="auth-logo">
+        <img src="/images/signuplogo.png" alt="Logo" />
+      </a>
+      
+      <div class="left-text">
+        <h1>Let's get<br>Started</h1>
+        <div class="accent-line"></div>
+      </div>
+    </div>
+
+    <div class="signup-right">
+      <div class="form-card">
+        <h2>Create Account</h2>
+        
+        <form action="/api/register" method="POST" class="registration-form">
+          
+          <div class="input-group">
+            <label for="fullName">Full name</label>
+            <input type="text" id="fullName" name="fullName" required>
+          </div>
+
+          <div class="input-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+          </div>
+
+          <div class="input-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+          </div>
+
+          <div class="input-group">
+            <label for="confirmPassword">Confirm Password</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" required>
+          </div>
+
+          <div class="checkbox-group">
+            <input type="checkbox" id="terms" required>
+            <label for="terms">I agree with <a href="#">Terms</a> and <a href="#">Privacy Policy</a></label>
+          </div>
+
+          <button type="submit" class="btn-signup">Sign up</button>
+          
+        </form>
+
+        <p class="login-prompt">Already have an account? <a href="/login">Sign in</a></p>
+      </div>
+    </div>
+
+  </section>
+
+</body>
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Appointments - DHMP Agbor</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="dashboard-body">
+
+  <div class="dashboard-layout">
+    
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <a href="/">
+          <img src="/images/dashboardlogo.svg" alt="DHMP Agbor Logo">
+        </a>
+      </div>
+      
+      <ul class="sidebar-menu">
+        <li><a href="/admin-dashboard"><i class="fas fa-chart-pie"></i> Overview</a></li>
+        <li class="active"><a href="/admin-appointments"><i class="fas fa-calendar-check"></i> Appointments</a></li>
+        <li><a href="/admin-patients"><i class="fas fa-users"></i> Patient Records</a></li>
+      </ul>
+
+      <div class="sidebar-bottom">
+        <ul class="sidebar-menu">
+          <li><a href="/admin-settings"><i class="fas fa-cog"></i> Facility Settings</a></li>
+          <li><a href="/login" class="logout"><i class="fas fa-sign-out-alt"></i> Secure Logout</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <main class="dashboard-content">
+      
+      <header class="dashboard-header" style="justify-content: space-between;">
+        <div class="live-clock" id="liveDateTime">
+          <i class="far fa-clock"></i> Loading time...
+        </div>
+        
+        <div class="profile-shortcut">
+          <div class="facility-badge">
+            <i class="fas fa-hospital"></i> <%= adminFacility %>
+          </div>
+        </div>
+      </header>
+
+      <div class="page-title">
+        <h1>Master Schedule</h1>
+        <p>Review, filter, and manage all patient appointments across your facility.</p>
+      </div>
+
+      <div class="booking-card admin-table-card" style="margin-top: 10px;">
+        
+        <div class="table-header">
+          <h2>All Appointments</h2>
+        </div>
+
+        <div class="table-controls">
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Search by patient name or ID...">
+          </div>
+          
+          <div class="filter-group">
+            <input type="date" class="filter-input">
+            <select class="filter-input">
+              <option value="all">All Statuses</option>
+              <option value="pending">Pending</option>
+              <option value="approved">Approved</option>
+              <option value="completed">Completed</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="table-responsive">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Date & Time</th>
+                <th>Patient Details</th>
+                <th>Reason for Visit</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+              <% if (appointments.length > 0) { %>
+                <% appointments.forEach(function(apt) { %>
+                  <tr>
+                    <td>
+                      <strong><%= new Date(apt.appointment_date).toLocaleDateString() %></strong><br>
+                      <span class="text-small"><%= apt.appointment_time %></span>
+                    </td>
+                    <td>
+                      <strong><%= apt.full_name %></strong><br>
+                      <span class="text-small">ID: AGB-2026-<%= apt.patient_id %> &nbsp;|&nbsp; <%= apt.phone || 'No phone provided' %></span>
+                    </td>
+                    <td>
+                      <p class="reason-text"><%= apt.reason %></p>
+                    </td>
+                    <td>
+                      <% if (apt.status === 'Pending') { %>
+                        <span class="badge badge-new">Pending</span>
+                      <% } else if (apt.status === 'Approved') { %>
+                        <span class="badge badge-existing" style="background:#f0fdf4; color:#16a34a;">Approved</span>
+                      <% } else { %>
+                        <span class="badge" style="background:#f1f5f9; color:#64748b;"><%= apt.status %></span>
+                      <% } %>
+                    </td>
+                    <td class="action-cell">
+                      <% if (apt.status === 'Pending') { %>
+                        <form action="/api/admin/appointment/<%= apt.id %>/approve" method="POST" style="display:inline;">
+                          <button type="submit" class="btn-approve" title="Approve"><i class="fas fa-check"></i></button>
+                        </form>
+                        <form action="/api/admin/appointment/<%= apt.id %>/decline" method="POST" style="display:inline;">
+                          <button type="submit" class="btn-decline" title="Decline"><i class="fas fa-times"></i></button>
+                        </form>
+                      <% } else { %>
+                        <button class="btn-action-neutral" title="View Profile"><i class="fas fa-user"></i></button>
+                      <% } %>
+                    </td>
+                  </tr>
+                <% }); %>
+              <% } else { %>
+                <tr>
+                  <td colspan="5" style="text-align: center; padding: 20px;">No appointment records found for this facility.</td>
+                </tr>
+              <% } %>
+
+            </tbody>
+          </table>
+        </div>
+        
+        <div class="pagination">
+          <p class="page-info">Showing all database entries</p>
+          <div class="page-buttons">
+            <button class="btn-page" disabled><i class="fas fa-chevron-left"></i></button>
+            <button class="btn-page active">1</button>
+            <button class="btn-page" disabled><i class="fas fa-chevron-right"></i></button>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    function updateClock() {
+      const now = new Date();
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      const dateString = now.toLocaleDateString('en-US', options);
+      
+      let hours = now.getHours();
+      let minutes = now.getMinutes();
+      let seconds = now.getSeconds();
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      
+      hours = hours % 12;
+      hours = hours ? hours : 12; 
+      minutes = minutes < 10 ? '0' + minutes : minutes;
+      seconds = seconds < 10 ? '0' + seconds : seconds;
+      
+      const timeString = hours + ':' + minutes + ':' + seconds + ' ' + ampm;
+      
+      document.getElementById('liveDateTime').innerHTML = 
+        `<i class="far fa-clock"></i> <strong>${timeString}</strong> &nbsp;|&nbsp; ${dateString}`;
+    }
+
+    updateClock();
+    setInterval(updateClock, 1000);
+  </script>
+
+</body>
+</html>

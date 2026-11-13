@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deactivate Account - DHMP Agbor</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="dashboard-body">
+
+  <div class="dashboard-layout">
+    
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <a href="/">
+          <img src="/images/dashboardlogo.svg" alt="DHMP Agbor Logo">
+        </a>
+      </div>
+      
+      <ul class="sidebar-menu">
+        <li><a href="/dashboard"><i class="fas fa-th-large"></i> Overview</a></li>
+        <li><a href="/booking"><i class="fas fa-calendar-plus"></i> Book Appointment</a></li>
+        <li><a href="/history"><i class="fas fa-history"></i> View History</a></li>
+      </ul>
+
+      <div class="sidebar-bottom">
+        <ul class="sidebar-menu">
+          <li><a href="/account"><i class="fas fa-user"></i> Account</a></li>
+          <li class="active"><a href="/settings"><i class="fas fa-cog"></i> Settings</a></li>
+          <li><a href="/login" class="logout"><i class="fas fa-sign-out-alt"></i> Log Out</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <main class="dashboard-content">
+      
+      <header class="dashboard-header">
+        <div class="profile-shortcut">
+          <div class="profile-pic">
+            <!-- FIXED: Dynamic Profile Picture -->
+            <img src="<%= user.profile_pic || '/images/profilepic.png' %>" alt="Profile">
+          </div>
+        </div>
+      </header>
+
+      <div class="page-title">
+        <h1>Deactivate Account</h1>
+        <p>This is a permanent action and cannot be undone.</p>
+      </div>
+
+      <div class="booking-card deactivate-card">
+        
+        <div class="warning-banner">
+          <div class="warning-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+          </div>
+          <div class="warning-text">
+            <h3>Are you absolutely sure?</h3>
+            <p>Deactivating your account will permanently delete your patient profile, medical history, and all upcoming appointments at Central Hospital, Owa-Alero, and Agbor-Obi facilities.</p>
+          </div>
+        </div>
+
+        <!-- FIXED: Added action and POST method -->
+        <form action="/api/deactivate" method="POST" class="booking-form">
+          
+          <div class="input-group">
+            <label for="reason">Why are you leaving? (Optional)</label>
+            <select id="reason" name="reason">
+              <option value="" disabled selected>Select a reason...</option>
+              <option value="relocating">I am relocating outside of Agbor/Delta State</option>
+              <option value="private">I am switching to a private clinic</option>
+              <option value="not-useful">The platform is not useful to me</option>
+              <option value="privacy">I have privacy concerns</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div class="input-group" style="margin-top: 25px;">
+            <label for="confirm-del-password">To verify, type your password below:</label>
+            <!-- FIXED: Added name attribute -->
+            <input type="password" id="confirm-del-password" name="password" placeholder="Enter your password" required>
+          </div>
+
+          <div class="form-actions deactivate-actions">
+            <a href="/settings" class="btn-cancel">Nevermind, Keep My Account</a>
+            <button type="submit" class="btn-danger-solid">Yes, Deactivate My Account</button>
+          </div>
+
+        </form>
+      </div>
+
+    </main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,103 @@
+# DHMP Agbor
+
+A hospital appointment booking web application. Patients can register, book and track appointments, and manage their profile. Hospital staff can review, approve or decline appointments for their facility.
+
+## Features
+
+**Patients**
+- Register, log in, reset and change password
+- Book appointments by facility, department, date and time slot
+- View upcoming appointments and full appointment history
+- Edit profile and upload a profile photo
+- Deactivate account
+
+**Staff / Admin**
+- Separate staff login with facility-based access
+- Dashboard with appointment statistics
+- Approve or decline appointments
+- View the full appointment schedule and patient list
+
+## Tech Stack
+
+- Node.js and Express
+- EJS templates
+- PostgreSQL (hosted on Supabase) via `pg`
+- `express-session` for sessions
+- `multer` for image uploads
+
+## Prerequisites
+
+- Node.js 18 or later
+- A Supabase project (or any PostgreSQL database)
+
+## Setup
+
+1. Clone the repository and install dependencies:
+   ```
+   git clone <your-repo-url>
+   cd dhmp-agbor
+   npm install
+   ```
+
+2. Create a `.env` file in the project root:
+   ```
+   DATABASE_URL=postgresql://postgres.<project-ref>:<password>@<host>.pooler.supabase.com:5432/postgres
+   SESSION_SECRET=replace-with-a-long-random-string
+   PORT=3000
+   ```
+
+3. Create the tables. In the Supabase dashboard, open **SQL Editor**, paste the contents of `schema.sql`, and run it.
+
+4. Start the app:
+   ```
+   npm start
+   ```
+   For development with auto-restart:
+   ```
+   npm run dev
+   ```
+
+5. Open `http://localhost:3000`.
+
+## Default Admin Login
+
+`schema.sql` creates a starter staff account:
+
+- Username: `admin`
+- Password: `ChangeMe123`
+
+Change this immediately after the first login.
+
+## Project Structure
+
+```
+server.js        Express app, routes and database queries
+schema.sql       PostgreSQL table definitions
+views/           EJS page templates
+public/          Static assets (CSS, JS, images)
+.env             Environment variables (not committed)
+```
+
+## Routes
+
+| Route | Description |
+|---|---|
+| `/` | Home page |
+| `/signup`, `/login` | Patient registration and login |
+| `/dashboard` | Patient dashboard |
+| `/booking` | Book an appointment |
+| `/history` | Appointment history |
+| `/account`, `/edit-profile`, `/settings` | Profile and account management |
+| `/admin-login` | Staff login |
+| `/admin-dashboard` | Staff dashboard |
+| `/admin-appointments` | Full appointment schedule |
+| `/admin-patients` | Patient list |
+
+## Known Limitations
+
+- Passwords are stored in plain text and should be hashed (for example with `bcrypt`) before real use.
+- Profile photos are saved to `public/images/` on the local disk. Use object storage such as Supabase Storage for hosted deployments.
+
+## License
+
+ISC

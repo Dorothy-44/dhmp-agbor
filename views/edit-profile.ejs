@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Profile - DHMP Agbor</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="dashboard-body">
+
+  <div class="dashboard-layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo"><a href="/"><img src="/images/dashboardlogo.svg" alt="DHMP Agbor Logo"></a></div>
+      <ul class="sidebar-menu">
+        <li><a href="/dashboard"><i class="fas fa-th-large"></i> Overview</a></li>
+        <li><a href="/booking"><i class="fas fa-calendar-plus"></i> Book Appointment</a></li>
+        <li><a href="/history"><i class="fas fa-history"></i> View History</a></li>
+      </ul>
+      <div class="sidebar-bottom">
+        <ul class="sidebar-menu">
+          <li class="active"><a href="/account"><i class="fas fa-user"></i> Account</a></li>
+          <li><a href="/settings"><i class="fas fa-cog"></i> Settings</a></li>
+          <li><a href="/login" class="logout"><i class="fas fa-sign-out-alt"></i> Log Out</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <main class="dashboard-content">
+      <header class="dashboard-header">
+        <div class="profile-shortcut">
+          <div class="profile-pic">
+            <img src="<%= user.profile_pic || '/images/profilepic.png' %>" alt="Profile">
+          </div>
+        </div>
+      </header>
+
+      <div class="page-title">
+        <h1>Edit Profile</h1>
+        <p>Update your personal information and emergency contact details.</p>
+      </div>
+
+      <div class="booking-card">
+        <form action="/api/update-profile" method="POST" class="booking-form" enctype="multipart/form-data">
+          
+          <div class="photo-edit-section">
+            <img src="<%= user.profile_pic || '/images/profilepic.png' %>" alt="Current Profile" class="photo-edit-preview" id="previewImage">
+            <div class="photo-edit-actions">
+              <label for="profile_upload" class="btn-upload-photo">Upload New Photo</label>
+              <input type="file" id="profile_upload" name="profileImage" accept="image/*" hidden onchange="previewFile(this)">
+              <p>Recommended size: 500x500px (JPG or PNG)</p>
+            </div>
+          </div>
+
+          <div class="form-section-title">Personal Details</div>
+          <div class="form-row">
+            <div class="input-group">
+              <label for="fullName">Full Name</label>
+              <input type="text" id="fullName" name="fullName" value="<%= user.full_name %>" required>
+            </div>
+            <div class="input-group">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" name="email" value="<%= user.email %>" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="input-group">
+              <label for="phone">Phone Number</label>
+              <input type="tel" id="phone" name="phone" value="<%= user.phone || '' %>">
+            </div>
+            <div class="input-group">
+              <label for="dob">Date of Birth</label>
+              <input type="date" id="dob" name="dob" value="<%= user.dob ? new Date(user.dob).toISOString().split('T')[0] : '' %>">
+            </div>
+          </div>
+          <div class="input-group">
+            <label for="address">Residential Address</label>
+            <input type="text" id="address" name="address" value="<%= user.address || '' %>">
+          </div>
+          <div class="form-section-title">Emergency Contact</div>
+          <div class="form-row">
+            <div class="input-group">
+              <label for="emName">Contact Name</label>
+              <input type="text" id="emName" name="emName" value="<%= user.em_name || '' %>">
+            </div>
+            <div class="input-group">
+              <label for="emPhone">Contact Phone Number</label>
+              <input type="tel" id="emPhone" name="emPhone" value="<%= user.em_phone || '' %>">
+            </div>
+          </div>
+
+          <input type="hidden" name="existingProfilePic" value="<%= user.profile_pic || '/images/profilepic.png' %>">
+
+          <div class="form-actions">
+            <a href="/account" class="btn-cancel">Cancel</a>
+            <button type="submit" class="btn-book-submit">Save Changes</button>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    function previewFile(input) {
+      const file = input.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('previewImage').src = e.target.result;
+        }
+        reader.readAsDataURL(file);
+      }
+    }
+  </script>
+</body>
+</html>
